@@ -76,12 +76,13 @@ function FloxaSidebar({
 
 export default function CopilotPage() {
   const [text, setText] = useState("");
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [messages, setMessages] = useState<any[]>([]);
   const [started, setStarted] = useState(false);
+  const [showFloxaInline, setShowFloxaInline] = useState(false);
+  const [floxaInitialFlow, setFloxaInitialFlow] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const [isFloxaActive, setIsFloxaActive] = useState(false);
   const [activeSidebarTab, setActiveSidebarTab] = useState("floxa");
 
   const maxWords = 500;
@@ -123,30 +124,35 @@ export default function CopilotPage() {
   };
 
   // --------------------
-  // Floxa screen
+  // Embedded Floxa inline in Copilot (when requested)
   // --------------------
-  if (isFloxaActive) {
+  if (showFloxaInline) {
     return (
-      <div className="flex">
-        {/* Sidebar only in Floxa mode */}
-        <FloxaSidebar
-          activeTab={activeSidebarTab}
-          onTabChange={(tab) => {
-            if (tab === "copilot") {
-              setIsFloxaActive(false);
-            } else {
-              setActiveSidebarTab("floxa");
-            }
-          }}
-        />
+      <div className="flex h-[90.5vh] overflow-hidden">
+        {/* Sidebar (unchanged for copilot) */}
+        <div
+          className={`transition-[width] duration-300 ${isSidebarOpen ? "w-64" : "w-12"} border-r border-gray-300`}
+        >
+          <CollapsibleSidebar
+            isOpen={isSidebarOpen}
+            onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
+            onFloxaClick={(title?: string) => {
+              // ensure inline floxa remains visible and optionally pass an initial flow
+              setShowFloxaInline(true);
+              setFloxaInitialFlow(title ?? null);
+            }}
+          />
+        </div>
 
-        {/* Floxa Content */}
-        <div className="flex flex-1">
-          <FloxaChatList />
-          <div className="flex flex-col flex-1">
-            <FloxaChatHeader />
-            <div style={{ overflowY: "auto", height: "calc(100vh - 120px)" }}>
-              <IntelligenceScreen />
+        {/* Floxa embedded content */}
+        <div className="flex flex-1 justify-center px-6">
+          <div className="w-full max-w-[900px] flex flex-col">
+            {/* <FloxaChatList /> */}
+            <div className="flex flex-col flex-1">
+              {/* <FloxaChatHeader /> */}
+              <div  style={{ overflowY: "auto", height: "calc(100vh - 60px)",scrollbarWidth: "none" }}>
+                <IntelligenceScreen initialFlow={floxaInitialFlow ?? undefined} />
+              </div>
             </div>
           </div>
         </div>
@@ -167,7 +173,11 @@ export default function CopilotPage() {
         <CollapsibleSidebar
           isOpen={isSidebarOpen}
           onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
-          onFloxaClick={() => setIsFloxaActive(true)} // Pass Floxa activation handler
+          onFloxaClick={(title?: string) => {
+            // open inline floxa; if a specific title was passed start that flow
+            setShowFloxaInline(true);
+            setFloxaInitialFlow(title ?? null);
+          }}
         />
       </div>
 

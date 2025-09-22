@@ -6,6 +6,7 @@ import { delay } from "@/utils/delay";
 import { Message, WelcomeMessage, ProcessingMessage } from "@/types/messages";
 import type { AnalysisMessage } from "@/types/messages";
 import { getFlowSuggestions } from "@/utils/flow-suggestions";
+import { usePathname } from "next/navigation";
 
 import BotBubble from "@/components/ui/botbubble";
 import UserBubble from "@/components/ui/userbubble";
@@ -174,7 +175,7 @@ import Step11b from "@/app/NewComponents/Option5/Step11b"
 // --------------------------------------
 // Main Intelligence Screen
 // --------------------------------------
-export default function IntelligenceScreen() {
+export default function IntelligenceScreen({ initialFlow }: { initialFlow?: string }) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [hasStarted, setHasStarted] = useState(false);
   const [input, setInput] = useState("");
@@ -183,6 +184,7 @@ export default function IntelligenceScreen() {
   const [currentStep, setCurrentStep] = useState(0);
   const endRef = useRef<HTMLDivElement>(null);
   const didMount = useRef(false);
+  const pathname = usePathname();
 
 
   const messageComponents: Record<string, JSX.Element> = {
@@ -370,8 +372,13 @@ export default function IntelligenceScreen() {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Initial welcome
+  // Initial welcome (skip when embedded on /copilot)
   useEffect(() => {
+    if (pathname === "/copilot") {
+      // do not inject the global welcome block when running inside the Copilot page
+      return;
+    }
+
     const welcome: WelcomeMessage = {
       id: crypto.randomUUID(),
       sender: "bot",
@@ -417,7 +424,7 @@ export default function IntelligenceScreen() {
       footer: "Simply click one of the options above to get started",
     };
     setMessages([welcome]);
-  }, []);
+  }, [pathname]);
 
   // Handle Welcome Picks
   const handlePickWelcome = async (title: string) => {
@@ -458,6 +465,17 @@ export default function IntelligenceScreen() {
         break;
     }
   };
+
+  // If parent requested an initial flow, auto-pick it once on mount
+  useEffect(() => {
+    if (!initialFlow) return;
+    // small timeout to allow the initial welcome message to be set up
+    // and to avoid double-runs when messages already exist
+    const t = setTimeout(() => {
+      handlePickWelcome(initialFlow);
+    }, 50);
+    return () => clearTimeout(t);
+  }, [initialFlow]);
 
   // Handle suggestion click
   const handleSuggestionClick = (suggestion: string) => {
