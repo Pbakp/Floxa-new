@@ -146,7 +146,7 @@ export default function CopilotPage() {
 
         {/* Floxa embedded content */}
         <div className="flex flex-1 justify-center px-6">
-          <div className="w-full max-w-[900px] flex flex-col">
+          <div style={{scrollbarWidth:"none"}} className="w-full overflow-x-auto xl:max-w-[900px] 2xl:max-w-[1200px]  flex flex-col">
             {/* <FloxaChatList /> */}
             <div className="flex flex-col flex-1">
               {/* <FloxaChatHeader /> */}

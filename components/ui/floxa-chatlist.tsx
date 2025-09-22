@@ -1,9 +1,12 @@
 "use client";
-import { ChevronDown, ChevronRight, SquarePen, ListFilter } from "lucide-react";
+import { ChevronDown, ChevronRight, SquarePen, ListFilter, RefreshCw } from "lucide-react";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 
 export default function Sidebar() {
     const [open, setOpen] = useState(true);
+    const pathname = usePathname();
+
   return (
     <div className="w-64 bg-white border-r h-full flex flex-col">
        {/* Header */}
@@ -20,6 +23,24 @@ export default function Sidebar() {
           )}
         </button>
         <div className="flex space-x-3">
+          {/* Reload button: refresh specific app routes or full page */}
+          <button
+            className="text-[#242424] hover:text-gray-800"
+            title="Reload"
+            onClick={() => {
+              if (typeof window === "undefined") return;
+              if (pathname === "/slack") {
+                // request IntelligenceScreen to re-render itself without a full page reload
+                window.dispatchEvent(new CustomEvent("floxa:refresh"));
+              } else if (pathname === "/teams") {
+                      window.dispatchEvent(new CustomEvent("floxa:refresh"));
+              } else {
+                  window.dispatchEvent(new CustomEvent("floxa:refresh"));
+              }
+            }}
+          >
+            <RefreshCw size={18} />
+          </button>
           <button className="text-[#242424] hover:text-gray-800">
             <ListFilter size={18} />
           </button>
@@ -44,3 +65,4 @@ export default function Sidebar() {
     </div>
   );
 }
+

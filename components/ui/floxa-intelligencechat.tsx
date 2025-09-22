@@ -186,6 +186,43 @@ export default function IntelligenceScreen({ initialFlow }: { initialFlow?: stri
   const didMount = useRef(false);
   const pathname = usePathname();
 
+  // helper to build the welcome block (reused on mount and on refresh)
+  const buildWelcome = () => {
+    return {
+      id: crypto.randomUUID(),
+      sender: "bot",
+      kind: "welcome",
+      text: "Hi! I'm Floxa, your AI project intelligence assistant. I can help you with eight workflows:\n\n",
+      options: [
+        { title: "Project Assistant", description: "Analyze contracts, build teams, orchestrate setup" },
+        { title: "Meeting Intelligence", description: "Analyze recordings, extract requirements, orchestrate actions" },
+        { title: "Onboarding Intelligence", description: "Accelerating New Employee Ramp-Up Through Unified Knowledge Access" },
+        { title: "Strategic Upsell Intelligence", description: "Data-Driven Sales Opportunity Identification" },
+        { title: "Customer Intelligence with Crisis Management", description: "Digital Maturity Assessment and Proactive Support" },
+        { title: "Digital Transformation Intelligence", description: "Strategic AI Implementation Planning" },
+        { title: "Proactive Staffing Intelligence", description: "Understaffing Detection to Automated Hiring" },
+        { title: "Strategic Growth Command Center", description: "Comprehensive Strategic Intelligence & Cross-Functional Execution" },
+      ],
+      footer: "Simply click one of the options above to get started",
+    } as WelcomeMessage;
+  };
+
+  // Listen for external refresh requests (e.g. from floxa-chatlist refresh button)
+  useEffect(() => {
+    const handler = () => {
+      // avoid injecting global welcome when embedded on /copilot
+      if (pathname === "/copilot") return;
+      setCurrentFlow(null);
+      setCurrentStep(0);
+      setHasStarted(false);
+      setInput("");
+      setBusy(false);
+      setMessages([buildWelcome()]);
+    };
+
+    window.addEventListener("floxa:refresh", handler);
+    return () => window.removeEventListener("floxa:refresh", handler);
+  }, [pathname]);
 
   const messageComponents: Record<string, JSX.Element> = {
 
@@ -379,51 +416,7 @@ export default function IntelligenceScreen({ initialFlow }: { initialFlow?: stri
       return;
     }
 
-    const welcome: WelcomeMessage = {
-      id: crypto.randomUUID(),
-      sender: "bot",
-      kind: "welcome",
-      text: "Hi! I'm Floxa, your AI project intelligence assistant. I can help you with eight workflows:\n\n",
-      options: [
-        {
-          title: "Project Assistant",
-          description: "Analyze contracts, build teams, orchestrate setup",
-        },
-        {
-          title: "Meeting Intelligence",
-          description:
-            "Analyze recordings, extract requirements, orchestrate actions",
-        },
-        {
-          title: "Onboarding Intelligence",
-          description:
-            "Accelerating New Employee Ramp-Up Through Unified Knowledge Access",
-        },
-        {
-          title: "Strategic Upsell Intelligence",
-          description: "Data-Driven Sales Opportunity Identification",
-        },
-        {
-          title: "Customer Intelligence with Crisis Management",
-          description: "Digital Maturity Assessment and Proactive Support",
-        },
-        {
-          title: "Digital Transformation Intelligence",
-          description: "Strategic AI Implementation Planning",
-        },
-        {
-          title: "Proactive Staffing Intelligence",
-          description: "Understaffing Detection to Automated Hiring",
-        },
-        {
-          title: "Strategic Growth Command Center",
-          description:
-            "Comprehensive Strategic Intelligence & Cross-Functional Execution",
-        },
-      ],
-      footer: "Simply click one of the options above to get started",
-    };
-    setMessages([welcome]);
+    setMessages([buildWelcome()]);
   }, [pathname]);
 
   // Handle Welcome Picks
@@ -525,9 +518,9 @@ export default function IntelligenceScreen({ initialFlow }: { initialFlow?: stri
   };
 
   return (
-    <div className="flex flex-col  mt-1">
-      {/* Chat Area */}
-      <div className="flex-1  p-6 space-y-4  bg-transparent" data-chat-container>
+    <div className="flex flex-col mt-1 h-full relative">
+      {/* Chat Area - scrollable */}
+      <div style={{scrollbarWidth:"none"}} className="flex-1 p-6 space-y-4 bg-transparent overflow-auto" data-chat-container>
         <AnimatePresence initial={false}>
           {messages.map((msg) => (
             <div key={msg.id} className="flex w-full flex-col gap-2">
@@ -551,23 +544,15 @@ export default function IntelligenceScreen({ initialFlow }: { initialFlow?: stri
                         steps={msg.steps as ProcessingMessage["steps"]}
                       />
                     )}
-                    {/* {msg.kind === "text" && (
-                      <div
-                        className="prose max-w-none"
-                        dangerouslySetInnerHTML={{ __html: msg.text }}
-                      />
-                    )} */}
-
                     {msg.kind === "text" && (
                       <>
                         {messageComponents[msg.text] ? (
-                          messageComponents[msg.text]   // render mapped component
+                          messageComponents[msg.text]
                         ) : (
-                          <div className="prose max-w-none">{msg.text}</div> // fallback plain text
+                          <div className="prose max-w-none">{msg.text}</div>
                         )}
                       </>
                     )}
-
                     {msg.kind === "typing" && <TypingDots />}
                   </BotBubble>
                 )
@@ -582,17 +567,21 @@ export default function IntelligenceScreen({ initialFlow }: { initialFlow?: stri
         <div ref={endRef} />
       </div>
 
-      {/* Input + Chips */}
-      <InputBar
-        input={input}
-        setInput={setInput}
-        onSend={handleSend}
-        busy={busy}
-        chips={chips}
-        onChipClick={(chip) => handlePickWelcome(chip)}
-        suggestions={suggestions}
-        onSuggestionClick={handleSuggestionClick}
-      />
+      {/* Input + Chips - sticky to bottom so it never slides up */}
+      <div className="sticky bottom-0 bg-white z-20 ">
+        <InputBar
+          input={input}
+          setInput={setInput}
+          onSend={handleSend}
+          busy={busy}
+          chips={chips}
+          onChipClick={(chip) => handlePickWelcome(chip)}
+          suggestions={suggestions}
+          onSuggestionClick={handleSuggestionClick}
+        />
+      </div>
     </div>
   );
 }
+     
+     
