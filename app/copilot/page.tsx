@@ -145,14 +145,15 @@ export default function CopilotPage() {
         </div>
 
         {/* Floxa embedded content */}
-        <div className="flex flex-1 justify-center px-6">
+        <div className="flex flex-1 2xl:mt-10 justify-center px-6">
           <div style={{scrollbarWidth:"none"}} className="w-full overflow-x-auto xl:max-w-[900px] 2xl:max-w-[1200px]  flex flex-col">
             {/* <FloxaChatList /> */}
             <div className="flex flex-col flex-1">
               {/* <FloxaChatHeader /> */}
-              <div  style={{ overflowY: "auto", height: "calc(100vh - 60px)",scrollbarWidth: "none" }}>
-                <IntelligenceScreen initialFlow={floxaInitialFlow ?? undefined} />
-              </div>
+              <div className="overflow-y-auto h-[calc(100vh-60px)] 2xl:h-[calc(100vh-100px)] scrollbar-hide">
+  <IntelligenceScreen initialFlow={floxaInitialFlow ?? undefined} />
+</div>
+
             </div>
           </div>
         </div>

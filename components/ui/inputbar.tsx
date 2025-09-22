@@ -113,7 +113,7 @@ export default function InputBar({
                   // Delay hiding to allow clicking on suggestions
                   setTimeout(() => setShowSuggestions(false), 150);
                 }}
-                placeholder=" A whole new way to work."
+                placeholder=" A whole new way to work. click ↓ for suggestions"
                 className="w-full min-h-[110px] resize-none rounded-lg border-2 border-gray-200 focus:border-blue-400 focus:ring-0 p-4 pr-12 text-sm outline-none"
               />
 
