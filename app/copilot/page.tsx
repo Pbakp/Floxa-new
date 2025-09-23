@@ -150,7 +150,7 @@ export default function CopilotPage() {
             {/* <FloxaChatList /> */}
             <div className="flex flex-col flex-1">
               {/* <FloxaChatHeader /> */}
-              <div className="overflow-y-auto h-[calc(100vh-60px)] 900px:h-[calc(100vh-120px)]  1200px:h-[calc(100vh-200px)] scrollbar-hide">
+              <div className="overflow-y-auto h-[calc(100vh-60px)] 2xl:h-[calc(100vh-100px)] 2000px:h-[calc(100vh-180px)] scrollbar-hide">
   <IntelligenceScreen initialFlow={floxaInitialFlow ?? undefined} />
 </div>
 
