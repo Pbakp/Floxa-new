@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { TrendingUp, Target, Users, BarChart3 } from "lucide-react";
 import { TfiReload } from "react-icons/tfi";
 import { motion, AnimatePresence } from "framer-motion";
+import { scrollToBottom } from "@/app/utils/scrollUtils";
 
 const OnboardingIntelligenceAns6 = () => {
   const [showAnalyzing, setShowAnalyzing] = useState(true);
@@ -22,10 +23,17 @@ const OnboardingIntelligenceAns6 = () => {
     const timerAnalyzing = setTimeout(() => {
       setShowAnalyzing(false);
       setShowFirst(true);
+        setTimeout(() => {
+        scrollToBottom();
+      }, 200);
     }, 3000);
 
-    const timer2 = setTimeout(() => setShowSecond(true), 4000);
-    const timer3 = setTimeout(() => setShowThird(true), 6000);
+    const timer2 = setTimeout(() =>{ setShowSecond(true) ;  setTimeout(() => {
+        scrollToBottom();
+      }, 200);}, 4000);
+    const timer3 = setTimeout(() =>{ setShowThird(true)  ;  setTimeout(() => {
+        scrollToBottom();
+      }, 200);},  6000);
 
     // Animate counters when second section shows
     const counterTimer = setTimeout(() => {

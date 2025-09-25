@@ -1,5 +1,5 @@
 // components/TeamRecommendation.tsx
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import AnalyzingCard from '../processing-animation';
 
@@ -16,6 +16,21 @@ const TeamRecommendation: React.FC = () => {
     { text: "Analyzing Confluence project documentation structures" }
   ], []);
 
+  // Function to scroll the main chat to bottom
+  const scrollToBottom = () => {
+    const chatContainer = document.querySelector('[data-chat-container]') ||
+      document.querySelector('.flex-1.p-6.space-y-4.bg-transparent') ||
+      document.querySelector('main') ||
+      document.body;
+
+    if (chatContainer) {
+      chatContainer.scrollTo({
+        top: chatContainer.scrollHeight,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   const handleBuildRepeatComplete = useCallback(() => {
     // Show dashboard first with smooth transition
     setShowDashboard(true);
@@ -23,8 +38,21 @@ const TeamRecommendation: React.FC = () => {
     // Show team recommendation after a smooth delay
     setTimeout(() => {
       setShowTeamRecommendation(true);
+      // Scroll to bottom when team recommendation is displayed
+      setTimeout(() => {
+        scrollToBottom();
+      }, 300);
     }, 500);
   }, []);
+
+  // Scroll when content changes
+  useEffect(() => {
+    if (showTeamRecommendation) {
+      setTimeout(() => {
+        scrollToBottom();
+      }, 300);
+    }
+  }, [showTeamRecommendation]);
 
   return (
     <>

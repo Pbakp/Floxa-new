@@ -26,6 +26,21 @@ const TeamSelectionPage = () => {
     { text: "Finalizing optimal team composition and confirming selections" }
   ], []);
 
+  // Function to scroll the main chat to bottom
+  const scrollToBottom = () => {
+    const chatContainer = document.querySelector('[data-chat-container]') ||
+      document.querySelector('.flex-1.p-6.space-y-4.bg-transparent') ||
+      document.querySelector('main') ||
+      document.body;
+
+    if (chatContainer) {
+      chatContainer.scrollTo({
+        top: chatContainer.scrollHeight,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   const handleBuildRepeatComplete = useCallback(() => {
     // Show dashboard first with smooth transition
     setShowDashboard(true);
@@ -33,6 +48,10 @@ const TeamSelectionPage = () => {
     // Show main content after a smooth delay
     setTimeout(() => {
       setShowMainContent(true);
+      // Scroll to bottom when main content is displayed
+      setTimeout(() => {
+        scrollToBottom();
+      }, 300);
     }, 500);
 
     // Show header after main content appears
@@ -43,11 +62,19 @@ const TeamSelectionPage = () => {
     // Show cards after header
     setTimeout(() => {
       setShowCards(true);
+      // Scroll to bottom when cards are displayed
+      setTimeout(() => {
+        scrollToBottom();
+      }, 300);
     }, 1200);
 
     // Show button after cards
     setTimeout(() => {
       setShowButton(true);
+      // Scroll to bottom when button is displayed
+      setTimeout(() => {
+        scrollToBottom();
+      }, 300);
     }, 1800);
   }, []);
 
@@ -73,6 +100,15 @@ const TeamSelectionPage = () => {
       };
     }
   }, [showMainContent]);
+
+  // Scroll when content changes
+  useEffect(() => {
+    if (showMainContent || showCards || showButton) {
+      setTimeout(() => {
+        scrollToBottom();
+      }, 300);
+    }
+  }, [showMainContent, showCards, showButton]);
 
   return (
 

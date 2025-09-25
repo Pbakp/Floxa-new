@@ -5,6 +5,7 @@ import { Shield, TrendingUp, AlertTriangle, Target } from "lucide-react";
 import { TfiReload } from "react-icons/tfi";
 import { motion, AnimatePresence } from "framer-motion";
 import Sugg1 from "../Option1/Missing/sugg1";
+import { scrollToBottom } from "@/app/utils/scrollUtils";
 
 const OnboardingIntelligenceAns4 = () => {
   const [showAnalyzing, setShowAnalyzing] = useState(true);
@@ -18,11 +19,20 @@ const OnboardingIntelligenceAns4 = () => {
     const timerAnalyzing = setTimeout(() => {
       setShowAnalyzing(false);
       setShowFirst(true);
+        setTimeout(() => {
+        scrollToBottom();
+      }, 200);
     }, 3000);
 
-    const timer2 = setTimeout(() => setShowSecond(true), 4000);
-    const timer3 = setTimeout(() => setShowThird(true), 5500);
-    const timer4 = setTimeout(() => setShowSugg1(true), 7000);
+    const timer2 = setTimeout(() =>{ setShowSecond(true);  setTimeout(() => {
+        scrollToBottom();
+      }, 200); }, 4000);
+    const timer3 = setTimeout(() =>{ setShowThird(true);  setTimeout(() => {
+        scrollToBottom();
+      }, 200); }, 5500);
+    const timer4 = setTimeout(() =>{ setShowSugg1(true);  setTimeout(() => {
+        scrollToBottom();
+      }, 200); }, 7000);
 
     return () => {
       clearTimeout(timerAnalyzing);

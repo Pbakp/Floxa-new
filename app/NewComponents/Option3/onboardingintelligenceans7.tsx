@@ -212,13 +212,13 @@ const OnboardingIntelligenceAns7 = () => {
     setShowDashboard(true);
 
     // Show sections with staggered delays for smooth animation
-    setTimeout(() => setShowFirst(true), 300);
-    setTimeout(() => setShowSecond(true), 600);
-    setTimeout(() => setShowThird(true), 900);
-    setTimeout(() => setShowFourth(true), 1200);
-    setTimeout(() => setShowFifth(true), 1500);
-    setTimeout(() => setShowSixth(true), 1800);
-    setTimeout(() => setShowSeventh(true), 2100);
+    setTimeout(() =>{ setShowFirst(true)   },  300);
+    setTimeout(() =>{ setShowSecond(true)  }, 600);
+    setTimeout(() =>{ setShowThird(true)   },  900);
+    setTimeout(() =>{ setShowFourth(true)  }, 1200);
+    setTimeout(() =>{ setShowFifth(true)   },  1500);
+    setTimeout(() =>{ setShowSixth(true)   },  1800);
+    setTimeout(() =>{ setShowSeventh(true) },2100);
     
     // Animate chart when sixth section shows (chart section)
     setTimeout(() => {

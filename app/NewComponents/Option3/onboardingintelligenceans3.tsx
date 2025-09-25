@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Calendar, TrendingUp, Target, Lightbulb } from "lucide-react";
 import { TfiReload } from "react-icons/tfi";
 import { motion, AnimatePresence } from "framer-motion";
+import { scrollToBottom } from "@/app/utils/scrollUtils";
 
 const OnboardingIntelligenceAns3 = () => {
   const [showAnalyzing, setShowAnalyzing] = useState(true);
@@ -16,10 +17,18 @@ const OnboardingIntelligenceAns3 = () => {
     const timerAnalyzing = setTimeout(() => {
       setShowAnalyzing(false);
       setShowFirst(true);
+
+        setTimeout(() => {
+        scrollToBottom();
+      }, 200);
     }, 3000);
 
-    const timer2 = setTimeout(() => setShowSecond(true), 4000);
-    const timer3 = setTimeout(() => setShowThird(true), 5500);
+    const timer2 = setTimeout(() => { setShowSecond(true);setTimeout(() => {
+            scrollToBottom();
+          }, 200) }, 4000);
+    const timer3 = setTimeout(() => { setShowThird(true);setTimeout(() => {
+            scrollToBottom();
+          }, 200)  }, 5500);
 
     return () => {
       clearTimeout(timerAnalyzing);

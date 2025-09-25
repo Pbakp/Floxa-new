@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useState, useMemo, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import AnalyzingCard from '../processing-animation';
 import DashboardValueSection from "./Step12";
@@ -38,6 +38,21 @@ const ProjectDashboard = () => {
     { text: "Creating cross-reference links between systems" }
   ], []);
 
+  // Function to scroll the main chat to bottom
+  const scrollToBottom = () => {
+    const chatContainer = document.querySelector('[data-chat-container]') ||
+      document.querySelector('.flex-1.p-6.space-y-4.bg-transparent') ||
+      document.querySelector('main') ||
+      document.body;
+
+    if (chatContainer) {
+      chatContainer.scrollTo({
+        top: chatContainer.scrollHeight,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   const handleBuildRepeatComplete = useCallback(() => {
     // Show dashboard first with smooth transition
     setShowDashboard(true);
@@ -70,8 +85,21 @@ const ProjectDashboard = () => {
     // Show strategic value section after dashboard value
     setTimeout(() => {
       setShowStrategicValue(true);
+      // Scroll to bottom when strategic value section is displayed
+      setTimeout(() => {
+        scrollToBottom();
+      }, 300);
     }, 5000);
   }, []);
+
+  // Scroll when content changes
+  useEffect(() => {
+    if (showDashboard || showDashboardValue || showStrategicValue) {
+      setTimeout(() => {
+        scrollToBottom();
+      }, 300);
+    }
+  }, [showDashboard, showDashboardValue, showStrategicValue]);
 
   return (
     <>

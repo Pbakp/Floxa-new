@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import AnalyzingCard from "../processing-animation"
+import { scrollToBottom } from "@/app/utils/scrollUtils"
 
 type Props = {}
 
@@ -27,13 +28,20 @@ const Step7 = (props: Props) => {
     setShowDashboard(true)
 
     // Show sections with staggered delays for smooth animation
-    setTimeout(() => setShowFirst(true), 300)
-    setTimeout(() => setShowSecond(true), 600)
-    setTimeout(() => setShowThird(true), 900)
+    setTimeout(() =>{ setShowFirst(true); setTimeout(() => {
+            scrollToBottom();
+          }, 200) }, 300)
+    setTimeout(() =>{ setShowSecond(true);setTimeout(() => {
+        scrollToBottom();
+      }, 200) }, 600)
+    setTimeout(() =>{ setShowThird(true); setTimeout(() => {
+        scrollToBottom();
+      }, 200) }, 900)
 
     // Show dashboard value section after a delay
     setTimeout(() => {
       setShowDashboardValue(true)
+      scrollToBottom() // Scroll to bottom after showing dashboard value
     }, 500)
   }, [])
 
@@ -135,6 +143,12 @@ const Step7 = (props: Props) => {
         return "bg-gray-100 text-gray-800 border-gray-200"
     }
   }
+
+  useEffect(() => {
+    if (showDashboardValue) {
+      scrollToBottom() // Ensure scrolling to bottom when dashboard value is shown
+    }
+  }, [showDashboardValue])
 
   return (
     <>

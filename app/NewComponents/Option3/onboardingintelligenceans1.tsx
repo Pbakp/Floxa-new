@@ -5,6 +5,7 @@ import { Database, Users, FileText, CheckCircle } from "lucide-react";
 import { TfiReload } from "react-icons/tfi";
 import { motion, AnimatePresence } from "framer-motion";
 import Sugg3 from "../Option1/Missing/sugg3";
+import { scrollToBottom } from "@/app/utils/scrollUtils";
 
 const OnboardingIntelligenceAns1 = () => {
   const [showAnalyzing, setShowAnalyzing] = useState(true);
@@ -26,11 +27,20 @@ const OnboardingIntelligenceAns1 = () => {
     const timerAnalyzing = setTimeout(() => {
       setShowAnalyzing(false);
       setShowFirst(true);
+        setTimeout(() => {
+        scrollToBottom();
+      }, 200);
     }, 3000);
 
-    const timer2 = setTimeout(() => setShowSecond(true), 4000);
-    const timer3 = setTimeout(() => setShowThird(true), 4500);
-    const timer4 = setTimeout(() => setShowSugg3(true), 7500); // Show after pricing animation completes
+    const timer2 = setTimeout(() =>{ setShowSecond(true);   setTimeout(() => {
+        scrollToBottom();
+      }, 200); }, 4000);
+    const timer3 = setTimeout(() =>{ setShowThird(true);   setTimeout(() => {
+        scrollToBottom();
+      }, 200);}, 4500);
+    const timer4 = setTimeout(() =>{ setShowSugg3(true);setTimeout(() => {
+        scrollToBottom();
+      }, 200) }, 7500); // Show after pricing animation completes
 
     // Animate pricing counters when third section shows
     const pricingTimer = setTimeout(() => {

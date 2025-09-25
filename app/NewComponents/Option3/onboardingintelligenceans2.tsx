@@ -5,6 +5,7 @@ import { Clock, User, CheckCircle } from "lucide-react";
 import { TfiReload } from "react-icons/tfi";
 import { motion, AnimatePresence } from "framer-motion";
 import Sugg2 from "../Option1/Missing/sugg2";
+import { scrollToBottom } from "@/app/utils/scrollUtils";
 
 const OnboardingIntelligenceAns2 = () => {
   const [showAnalyzing, setShowAnalyzing] = useState(true);
@@ -20,7 +21,9 @@ const OnboardingIntelligenceAns2 = () => {
       setShowFirst(true);
     }, 3000);
 
-    const timer2 = setTimeout(() => setShowSecond(true), 4000);
+    const timer2 = setTimeout(() =>{ setShowSecond(true);  setTimeout(() => {
+        scrollToBottom();
+      }, 200);}, 4000);
     const timer3 = setTimeout(() => setShowThird(true), 4500);
     const timer4 = setTimeout(() => setShowSugg2(true), 6000);
 
